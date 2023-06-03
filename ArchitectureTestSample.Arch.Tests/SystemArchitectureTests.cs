@@ -101,7 +101,7 @@ public class SystemArchitectureTests
     public void AllClassesShouldHaveMaximumOfThreeConstructorParametersV2()
     {
         // given
-        var maximumConstructorParametersRule = new MaximumConstructorParametersRule(maximumParameters: 3);
+        var maximumConstructorParametersRule = new MaximumConstructorParametersRule(maximumParameterCount: 3);
         var conditions = Types.That()
             .AreClasses()
             .Should().MeetCustomRule(maximumConstructorParametersRule);

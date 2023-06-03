@@ -6,13 +6,13 @@ namespace ArchitectureTestSample.Arch.Tests.CustomRules;
 
 internal sealed class MaximumConstructorParametersCondition : ICondition<Class>
 {
-    private readonly int _maximumParameters;
+    private readonly int _maximumParameterCount;
     
-    public string Description => $"should have no more than {_maximumParameters} constructor parameters";
+    public string Description => $"should have no more than {_maximumParameterCount} constructor parameters";
 
-    public MaximumConstructorParametersCondition(int maximumParameters)
+    public MaximumConstructorParametersCondition(int maximumParameterCount)
     {
-        _maximumParameters = maximumParameters;
+        _maximumParameterCount = maximumParameterCount;
     }
 
     public IEnumerable<ConditionResult> Check(IEnumerable<Class> objects, Architecture architecture)
@@ -26,12 +26,12 @@ internal sealed class MaximumConstructorParametersCondition : ICondition<Class>
                 yield return new ConditionResult(@class, pass: true);
             }
             
-            if (constructors.Any(x => x.Parameters.Count() <= _maximumParameters))
+            if (constructors.Any(x => x.Parameters.Count() <= _maximumParameterCount))
             {
                 yield return new ConditionResult(@class, pass: true);
             }
 
-            yield return new ConditionResult(@class, pass: false, failDescription: $"has a constructor with more than {_maximumParameters} parameters");
+            yield return new ConditionResult(@class, pass: false, failDescription: $"has a constructor with more than {_maximumParameterCount} parameters");
         }
     }
 

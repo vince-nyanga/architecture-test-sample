@@ -35,8 +35,6 @@ internal sealed class MaximumConstructorParametersCondition : ICondition<Class>
         }
     }
 
-    public bool CheckEmpty()
-    {
-        return true;
-    }
+    public bool CheckEmpty() =>
+        true;
 }

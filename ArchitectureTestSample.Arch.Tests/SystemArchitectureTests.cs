@@ -1,5 +1,4 @@
 using ArchitectureTestSample.Arch.Tests.CustomRules;
-using ArchitectureTestSample.Brokers;
 using ArchUnitNET.Domain;
 using ArchUnitNET.Fluent;
 using ArchUnitNET.Loader;
@@ -12,23 +11,23 @@ namespace ArchitectureTestSample.Arch.Tests;
 
 public class SystemArchitectureTests
 {
+    // Loading the architecture from the test for ArchUnitNET
     private static readonly Architecture Architecture =
-        new ArchLoader().LoadAssemblies(typeof(IStorageBroker).Assembly).Build();
+        new ArchLoader().LoadAssemblies(typeof(Program).Assembly).Build();
 
-    private readonly IObjectProvider<Class> _brokerClasses =
-        Classes().That().ResideInNamespace("ArchitectureTestSample.Brokers").As("Brokers");
-    
-    private readonly IObjectProvider<Class> _serviceClasses =
-        Classes().That().ResideInNamespace("ArchitectureTestSample.Services").As("Services");
-
+    // Loading the types from the current test for NetArchTest
     private static readonly Types Types = Types.InAssembly(typeof(Program).Assembly);
 
     [Fact]
     public void BrokersShouldBeSealedAndInternalV1()
     {
         // given
+        var brokerClasses =  Classes().That().ResideInNamespace("ArchitectureTestSample.Brokers")
+            .As("Brokers");
+        
+        // when
         IArchRule rule = Classes().
-            That().Are(_brokerClasses)
+            That().Are(brokerClasses)
             .Should().BeInternal()
             .AndShould().BeSealed();
 
@@ -57,8 +56,12 @@ public class SystemArchitectureTests
     public void ServicesShouldDependOnBrokersV1()
     {
         // given
+        var serviceClasses = Classes().That().ResideInNamespace("ArchitectureTestSample.Services")
+            .As("Services");
+        
+        // when
         IArchRule rule = Classes().
-            That().Are(_serviceClasses)
+            That().Are(serviceClasses)
             .Should().DependOnAnyTypesThat().ResideInNamespace("ArchitectureTestSample.Brokers");
         
         // then
@@ -86,6 +89,8 @@ public class SystemArchitectureTests
     {
         // given
         var maximumConstructorParametersCondition = new MaximumConstructorParametersCondition(3);
+        
+        // when
         IArchRule rule = Classes().Should().FollowCustomCondition(maximumConstructorParametersCondition);
         
         // then
